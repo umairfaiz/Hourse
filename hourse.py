@@ -38,7 +38,7 @@ class Hourse:
 
 	def launchGource(self):
 		call(['gource', 
-				 #'--hide', 'progress',
+				 '--hide', 'progress',
 				 '-i', '0', 
 				 '-a', '1', 
 				 'log.tmp'])
