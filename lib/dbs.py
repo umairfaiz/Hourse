@@ -39,11 +39,11 @@ class firefox_db:
                 for v in self.getVisits(idx):
                     h.append({
                         'id': idx,
-                       'url': url,
+                       'url': url.strip('http://'),
                      'title': title,
                       'time': str(v[3])
                         });
-        return h
+        return h[::-1]
 
     def getVisits(self,idx):
         q = "SELECT id,                         \
