@@ -1,4 +1,3 @@
-
 import os
 import sys
 import sqlite3 # Needs 3.7.17
@@ -19,10 +18,11 @@ import sqlite3 # Needs 3.7.17
 class firefox_db:
     def __init__(self):
         self.db = sqlite3.connect('C:\\Users\\Travis\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite')
-        self.listHistory()
 
     def listHistory(self,history = 100):
-        r = self.db.execute('SELECT id,url,title FROM moz_places ORDER BY id DESC LIMIT %d'%history)
+        q = 'SELECT id,url,title FROM moz_places ORDER BY id DESC LIMIT %d'
+        q%= history
+        r = self.db.execute(q)
         h = []
         for idx,url,title in r:
             h.append({
@@ -31,4 +31,3 @@ class firefox_db:
              'title': title if title else url
                 });
         return h
-
