@@ -1,6 +1,7 @@
 import os
 import sys
 import sqlite3 # Needs 3.7.17
+import unicodedata
 
 ### moz_places:
 #0  id
@@ -36,12 +37,16 @@ class firefox_db:
         h = []
         for idx,url,title in r:
             if url.find('place:') == -1:
+                url = self.strip(self.noUni(url))
+                suf = url[:url.find('.')]
+                url+='.'+suf
+
                 for v in self.getVisits(idx):
                     h.append({
                         'id': idx,
-                       'url': url.strip('http://'),
-                     'title': title,
-                      'time': str(v[3])
+                       'url': url,
+                     'title': self.noUni(title) if title else url,
+                      'time': str((v[3]/1000000))
                         });
         return h[::-1]
 
@@ -54,3 +59,19 @@ class firefox_db:
              WHERE place_id = %d"
 
         return self.db.execute(q%idx)
+
+    def strip(self,url,dist=5):
+        strip = ['http://','https://']
+        for s in strip:
+            url = url.strip(s)
+
+        f = url.find('.')
+        if f < dist:
+            url = url[f+1:]
+
+        return url
+    def noUni(self,instr):
+        if instr:
+            return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
+        else:
+            return ' '

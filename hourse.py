@@ -4,8 +4,8 @@
 # Import libraries
 import os
 import sys
+import random
 from subprocess import call
-import unicodedata
 
 sys.path.append('./lib')
 
@@ -27,9 +27,9 @@ class Hourse:
 								r['time'],
 								'Firefox',
 								'M',
-								self.noUni(r['url']),
-								'',
-								self.noUni(r['title'])
+								r['url'],
+								self.getColor(r['url']),
+								r['title']
 							   ])+"\n"
 
 		f = open('log.tmp','wb')
@@ -38,18 +38,27 @@ class Hourse:
 
 	def launchGource(self):
 		call(['gource', 
-				 '--hide', 'progress',
+				 #'--hide', 'progress',
 				 '-i', '0', 
 				 '-a', '1', 
 				 'log.tmp'])
 
+	def getColor(self,url):
+		r = hex(random.randrange(200,255,1))[-2:]
+		g = hex(random.randrange(200,255,1))[-2:]
+		b = hex(random.randrange(200,255,1))[-2:]
+		o = r+g+b
 
-	def noUni(self,instr):
-		if instr:
-			return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
-		else:
-			return ' '
+		if url.find('imgur.com') > -1:
+			o = '85BF25'
+		elif url.find('reddit.com') > -1:
+			o = 'FFFFFF'
+		elif url.find('wikipedia.org') > -1:
+			o = '6666CC'
+		elif url.find('facebook.com') > -1:
+			o = '4C66A4'
 
+		return o
 
 if __name__ == "__main__":
 	main = Hourse()
