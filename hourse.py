@@ -15,10 +15,14 @@ from dbs import firefox_db
 class Hourse:
 	def __init__(self):
 		self.db = firefox_db()
-		self.history = self.db.listHistory()
-		self.createCustomLog()
+		self.history = self.db.getVisits(16)
+		for f in self.history:
+			print f
+		#self.createCustomLog()
+		#self.launchGource()
 
 	def createCustomLog(self):
+
 		self.log = ''
 
 		for r in self.history:
@@ -28,9 +32,20 @@ class Hourse:
 								self.noUni(r['url']),
 								'default',
 								self.noUni(r['title'])
-							   ])+"\r\n\r\n\r\n"
+							   ])+"\n"
 
-		print self.log
+	def launchGource(self):
+		gource = subprocess.Popen(['gource', 
+									 '--log-format', 'custom', 
+									 '--hide', 'progress',
+									 '-i', '0', 
+									 '-a','1', 
+									 '--realtime',
+									 '-', self.log], 
+									 shell=True)
+		gource.communicate()
+
+
 
 	def noUni(self,instr):
 		return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')

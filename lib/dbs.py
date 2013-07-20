@@ -16,10 +16,10 @@ import sqlite3 # Needs 3.7.17
 #10 guid
 
 class firefox_db:
-    def __init__(self):
+    def __init__(self,history = 100):
         self.db = sqlite3.connect('C:\\Users\\Travis\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite')
 
-    def listHistory(self,history = 100):
+    def listHistory(self):
         q = 'SELECT id,url,title FROM moz_places ORDER BY id DESC LIMIT %d'
         q%= history
         r = self.db.execute(q)
@@ -32,3 +32,13 @@ class firefox_db:
                  'title': title if title else url
                     });
         return h
+
+    def getVisits(self,idx):
+        q = "SELECT id,                         \
+                    from_visit,                 \
+                    place_id,                   \
+                    visit_date                  \
+             FROM moz_historyvisits             \
+             WHERE place_id = %d"
+
+        return self.db.execute(q%idx)
