@@ -40,7 +40,7 @@ class Hourse:
 		call(['gource', 
 				 '--hide', 'progress',
 				 '-i', '0', 
-				 '-a','1', 
+				 '-a', '1', 
 				 'log.tmp'])
 
 
