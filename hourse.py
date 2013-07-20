@@ -15,24 +15,22 @@ from dbs import firefox_db
 class Hourse:
 	def __init__(self):
 		self.db = firefox_db()
-		self.history = self.db.getVisits(16)
-		for f in self.history:
-			print f
-		#self.createCustomLog()
-		#self.launchGource()
+		self.history = self.db.listHistory()
+		self.createCustomLog()
+		self.launchGource()
 
 	def createCustomLog(self):
-
 		self.log = ''
 
 		for r in self.history:
 			self.log+= '|'.join([
+								r['time'],
 								'Firefox',
 								'M',
 								self.noUni(r['url']),
-								'default',
+								'#FF0000',
 								self.noUni(r['title'])
-							   ])+"\n"
+							   ])+"\r\n"
 
 	def launchGource(self):
 		gource = subprocess.Popen(['gource', 
@@ -46,9 +44,11 @@ class Hourse:
 		gource.communicate()
 
 
-
 	def noUni(self,instr):
-		return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
+		if instr:
+			return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
+		else:
+			return ' '
 
 
 if __name__ == "__main__":

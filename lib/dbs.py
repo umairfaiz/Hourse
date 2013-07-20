@@ -15,22 +15,33 @@ import sqlite3 # Needs 3.7.17
 #9  last_visit_date
 #10 guid
 
+### moz_historyvisits
+#0  id
+#1  from_visit
+#2  place_id
+#3  visit_date
+#4  visit_type
+#5  session
+
 class firefox_db:
     def __init__(self,history = 100):
         self.db = sqlite3.connect('C:\\Users\\Travis\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite')
+        self.history = history
 
     def listHistory(self):
         q = 'SELECT id,url,title FROM moz_places ORDER BY id DESC LIMIT %d'
-        q%= history
+        q%= self.history
         r = self.db.execute(q)
         h = []
         for idx,url,title in r:
             if url.find('place:') == -1:
-                h.append({
-                    'id': idx,
-                   'url': url,
-                 'title': title if title else url
-                    });
+                for v in self.getVisits(idx):
+                    h.append({
+                        'id': idx,
+                       'url': url,
+                     'title': title,
+                      'time': str(v[3])
+                        });
         return h
 
     def getVisits(self,idx):
