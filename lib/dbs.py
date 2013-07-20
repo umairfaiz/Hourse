@@ -25,9 +25,10 @@ class firefox_db:
         r = self.db.execute(q)
         h = []
         for idx,url,title in r:
-            h.append({
-                'id': idx,
-               'url': url,
-             'title': title if title else url
-                });
+            if url.find('place:') == -1:
+                h.append({
+                    'id': idx,
+                   'url': url,
+                 'title': title if title else url
+                    });
         return h
