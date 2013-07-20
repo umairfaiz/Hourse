@@ -28,19 +28,22 @@ class Hourse:
 								'Firefox',
 								'M',
 								self.noUni(r['url']),
-								'#FF0000',
+								'',
 								self.noUni(r['title'])
-							   ])+"\r\n"
+							   ])+"\n"
+
+		f = open('log.tmp','wb')
+		f.write(self.log)
+
 
 	def launchGource(self):
 		gource = subprocess.Popen(['gource', 
-									 '--log-format', 'custom', 
 									 '--hide', 'progress',
 									 '-i', '0', 
 									 '-a','1', 
-									 '--realtime',
-									 '-', self.log], 
-									 shell=True)
+									 'log.tmp'], 
+									 shell=True,
+									 stdin = sys.__stdout__)
 		gource.communicate()
 
 
