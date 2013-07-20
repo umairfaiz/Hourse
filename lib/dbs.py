@@ -25,7 +25,8 @@ import sqlite3 # Needs 3.7.17
 
 class firefox_db:
     def __init__(self,history = 100):
-        self.db = sqlite3.connect('C:\\Users\\Travis\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite')
+        places = os.environ['APPDATA']+'\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite'
+        self.db = sqlite3.connect(places)
         self.history = history
 
     def listHistory(self):
