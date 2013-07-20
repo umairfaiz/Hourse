@@ -4,7 +4,7 @@
 # Import libraries
 import os
 import sys
-import subprocess
+from subprocess import call
 import unicodedata
 
 sys.path.append('./lib')
@@ -37,14 +37,11 @@ class Hourse:
 
 
 	def launchGource(self):
-		gource = subprocess.Popen(['gource', 
-									 '--hide', 'progress',
-									 '-i', '0', 
-									 '-a','1', 
-									 'log.tmp'], 
-									 shell=True,
-									 stdin = sys.__stdout__)
-		gource.communicate()
+		call(['gource', 
+				 '--hide', 'progress',
+				 '-i', '0', 
+				 '-a','1', 
+				 'log.tmp'])
 
 
 	def noUni(self,instr):
