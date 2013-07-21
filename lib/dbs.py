@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import sqlite3 # Needs 3.7.17
 import unicodedata
 
@@ -122,8 +123,9 @@ class firefox_db(database):
 class chrome_db(database):
     def __init__(self,history = 100):
         places = os.path.dirname(os.environ['APPDATA']) # APPDATA puts us in roaming, pop up a dir
-        places+='\\Local\\Google\\Chrome\\User Data\\Default\\tmp'
-        self.db = sqlite3.connect(places)
+        places+='\\Local\\Google\\Chrome\\User Data\\Default\\History'
+        shutil.copy2(places,'./dbs/Chrome')
+        self.db = sqlite3.connect('./dbs/Chrome')
         self.history = history
 
     def listHistory(self):

@@ -1,3 +1,5 @@
 *.pyc
 log.tmp
 ffmpeg*
+./dbs/Chrome
+./dbs/Firefox
