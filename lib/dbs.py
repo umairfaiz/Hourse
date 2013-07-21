@@ -58,8 +58,8 @@ class database(object):
 class firefox_db(database):
     def __init__(self,history = 100):
         places = os.environ['APPDATA']+'\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite'
-        shutil.copy2(places,'./dbs/Firefox')
-        self.db = sqlite3.connect('./dbs/Firefox')
+        shutil.copy2(places,'./dbs/Firefox.db')
+        self.db = sqlite3.connect('./dbs/Firefox.db')
         self.history = history
 
     def listHistory(self):
@@ -125,8 +125,8 @@ class chrome_db(database):
     def __init__(self,history = 100):
         places = os.path.dirname(os.environ['APPDATA']) # APPDATA puts us in roaming, pop up a dir
         places+='\\Local\\Google\\Chrome\\User Data\\Default\\History'
-        shutil.copy2(places,'./dbs/Chrome')
-        self.db = sqlite3.connect('./dbs/Chrome')
+        shutil.copy2(places,'./dbs/Chrome.db')
+        self.db = sqlite3.connect('./dbs/Chrome.db')
         self.history = history
 
     def listHistory(self):
