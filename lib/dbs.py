@@ -58,7 +58,8 @@ class database(object):
 class firefox_db(database):
     def __init__(self,history = 100):
         places = os.environ['APPDATA']+'\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite'
-        self.db = sqlite3.connect(places)
+        shutil.copy2(places,'./dbs/Firefox')
+        self.db = sqlite3.connect('./dbs/Firefox')
         self.history = history
 
     def listHistory(self):
