@@ -12,10 +12,11 @@ sys.path.append('./lib')
 from dbs import *
 
 
-class Hourse:
+class Hourse(object):
+
 	def __init__(self):
-		#self.db = chrome_db()
-		self.db = firefox_db()
+		self.db = chrome_db()
+		#self.db = firefox_db()
 		self.history = self.db.listHistory()
 		# 
 		# self.createCustomLog()

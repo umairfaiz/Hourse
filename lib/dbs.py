@@ -21,6 +21,7 @@ class database(object):
             url = url[f+1:]
 
         return url
+
     def noUni(self,instr):
         if instr:
             return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
@@ -28,7 +29,9 @@ class database(object):
             return ' '
 
 
-
+###
+### Firefox Database
+######################
 
 ### moz_places:
 #0  id
@@ -88,3 +91,40 @@ class firefox_db(database):
         return self.db.execute(q%idx)
 
 
+###
+### Chrome Database
+####################
+
+### urls
+#0  id
+#1  url
+#2  title
+#3  visit_count
+#4  typed_count
+#5  last_visit_time
+#6  hidden
+#7  favicon_id
+
+### visits
+#0  id
+#1  url
+#2  visit_time
+#3  from_visit
+#4  transition
+#5  segment_id
+#6  is_indexed
+#7  visit_duration
+
+### visit_source
+#0  id
+#1  source
+
+class chrome_db(database):
+    def __init__(self,history = 100):
+        places = os.path.dirname(os.environ['APPDATA']) # APPDATA puts us in roaming, pop up a dir
+        places+='\\Local\\Google\\Chrome\\User Data\\Default\\tmp'
+        self.db = sqlite3.connect(places)
+        self.history = history
+
+    def listHistory(self):
+        pass
