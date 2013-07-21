@@ -18,9 +18,11 @@ class Hourse(object):
 		self.browser = browser
 
 		if browser == 'Chrome':
-			self.db = chrome_db()
+			self.db = chrome_db(1000)
 		elif browser == 'Firefox':
-			self.db = firefox_db()
+			self.db = firefox_db(1000)
+		elif browser == 'Both':
+			self.db = both_db(1000)
 
 
 		self.history = self.db.listHistory()
@@ -33,7 +35,7 @@ class Hourse(object):
 		for r in self.history:
 			self.log+= '|'.join([
 								r['time'],
-								self.browser,
+								r['browser'],
 								'M',
 								r['url'],
 								self.getColor(r['url']),
@@ -46,7 +48,7 @@ class Hourse(object):
 
 	def launchGource(self):
 		call(['gource', 
-				 #'--hide', 'progress',
+				 '--hide', 'progress,dirnames,filenames',
 				 '-i', '0', 
 				 '-a', '1', 
 				 'log.tmp'])
@@ -69,4 +71,4 @@ class Hourse(object):
 		return o
 
 if __name__ == "__main__":
-	main = Hourse('Chrome')
+	main = Hourse('Both')

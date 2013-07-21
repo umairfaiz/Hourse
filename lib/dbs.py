@@ -60,6 +60,7 @@ class firefox_db(database):
         places = os.environ['APPDATA']+'\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite'
         shutil.copy2(places,'./dbs/Firefox.db')
         self.db = sqlite3.connect('./dbs/Firefox.db')
+        self.browser = 'Firefox'
         self.history = history
 
     def listHistory(self):
@@ -78,9 +79,10 @@ class firefox_db(database):
                         'id': idx,
                        'url': url,
                      'title': self.noUni(title) if title else url,
-                      'time': str((v[3]/1000000))
+                      'time': str((v[3]/1000000)),
+                   'browser':self.browser
                         });
-        return h[::-1]
+        return sorted(h, key=lambda k: k['time'])
 
     def getVisits(self,idx):
         q = "SELECT id,                         \
@@ -127,6 +129,7 @@ class chrome_db(database):
         places+='\\Local\\Google\\Chrome\\User Data\\Default\\History'
         shutil.copy2(places,'./dbs/Chrome.db')
         self.db = sqlite3.connect('./dbs/Chrome.db')
+        self.browser = 'Chrome'
         self.history = history
 
     def listHistory(self):
@@ -145,11 +148,24 @@ class chrome_db(database):
                         'id': idx,
                        'url': url,
                      'title': self.noUni(title) if title else url,
-                      'time': str((v[0]/1000000)-11644473600)
+                      'time': str((v[0]/1000000)-11644473600),
+                   'browser':self.browser
                         });
-        return h[::-1]
+        return sorted(h, key=lambda k: k['time'])
 
     def getVisits(self,url):
         q = 'SELECT visit_time,url,from_visit FROM visits WHERE url = %s'
         q%=url
         return self.db.execute(q)
+
+
+class both_db(database):
+    def __init__(self,history=1000):
+        self.history = history
+
+    def listHistory(self):
+        c = chrome_db(self.history)
+        f = firefox_db(self.history)
+        c = c.listHistory()
+        f = f.listHistory()
+        return sorted(c+f, key=lambda k: k['time'])
