@@ -42,7 +42,7 @@ class Hourse(object):
 								r['title']
 							   ])+"\n"
 
-		f = open('log.tmp','wb')
+		f = open('log/history.hrc','wb')
 		f.write(self.log)
 
 
@@ -51,7 +51,7 @@ class Hourse(object):
 				 '--hide', 'progress,dirnames,filenames',
 				 '-i', '0', 
 				 '-a', '1', 
-				 'log.tmp'])
+				 'log/history.hrc'])
 
 	def getColor(self,url):
 		r = hex(random.randrange(200,255,1))[-2:]

@@ -4,8 +4,6 @@ import shutil
 import sqlite3 # Needs 3.7.17
 import unicodedata
 
-
-
 class database(object):
 
     def strip(self,url,dist=5):
@@ -28,6 +26,7 @@ class database(object):
     def listHistory(self): raise NotImplementedError
 
     def getVisits(self): raise NotImplementedError
+
 
 
 ###
@@ -95,6 +94,7 @@ class firefox_db(database):
         return self.db.execute(q%idx)
 
 
+
 ###
 ### Chrome Database
 ####################
@@ -157,6 +157,7 @@ class chrome_db(database):
         q = 'SELECT visit_time,url,from_visit FROM visits WHERE url = %s'
         q%=url
         return self.db.execute(q)
+
 
 
 class both_db(database):
