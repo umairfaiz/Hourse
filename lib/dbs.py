@@ -28,6 +28,8 @@ class database(object):
     def getVisits(self): raise NotImplementedError
 
 
+class Object(object):
+    pass
 
 ###
 ### Firefox Database
@@ -74,14 +76,14 @@ class firefox_db(database):
                 url+='.'+suf
 
                 for v in self.getVisits(idx):
-                    h.append({
-                        'id': idx,
-                       'url': url,
-                     'title': self.noUni(title) if title else url,
-                      'time': str((v[3]/1000000)),
-                   'browser':self.browser
-                        });
-        return sorted(h, key=lambda k: k['time'])
+                    visit = Object()
+                    visit.id      = idx
+                    visit.url     = url
+                    visit.title   = self.noUni(title) if title else url
+                    visit.time    = str((v[3]/1000000))
+                    visit.browser = self.browser
+                    h.append(visit);
+        return sorted(h, key=lambda t: t.time)
 
     def getVisits(self,idx):
         q = "SELECT id,                         \
@@ -144,14 +146,14 @@ class chrome_db(database):
                 url+='.'+suf
 
                 for v in self.getVisits(idx):
-                    h.append({
-                        'id': idx,
-                       'url': url,
-                     'title': self.noUni(title) if title else url,
-                      'time': str((v[0]/1000000)-11644473600),
-                   'browser':self.browser
-                        });
-        return sorted(h, key=lambda k: k['time'])
+                    visit = Object()
+                    visit.id      = idx
+                    visit.url     = url
+                    visit.title   = self.noUni(title) if title else url
+                    visit.time    = str((v[0]/1000000)-11644473600)
+                    visit.browser = self.browser
+                    h.append(visit);
+        return sorted(h, key=lambda t: t.time)
 
     def getVisits(self,url):
         q = 'SELECT visit_time,url,from_visit FROM visits WHERE url = %s'
@@ -169,4 +171,4 @@ class both_db(database):
         f = firefox_db(self.history)
         c = c.listHistory()
         f = f.listHistory()
-        return sorted(c+f, key=lambda k: k['time'])
+        return sorted(c+f, key=lambda t: t.time)
