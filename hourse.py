@@ -14,13 +14,18 @@ from dbs import *
 
 class Hourse(object):
 
-	def __init__(self):
-		self.db = chrome_db()
-		#self.db = firefox_db()
+	def __init__(self,browser):
+		self.browser = browser
+
+		if browser == 'Chrome':
+			self.db = chrome_db()
+		elif browser == 'Firefox':
+			self.db = firefox_db()
+
+
 		self.history = self.db.listHistory()
-		# 
-		# self.createCustomLog()
-		# self.launchGource()
+		self.createCustomLog()
+		self.launchGource()
 
 	def createCustomLog(self):
 		self.log = ''
@@ -28,7 +33,7 @@ class Hourse(object):
 		for r in self.history:
 			self.log+= '|'.join([
 								r['time'],
-								'Firefox',
+								self.browser,
 								'M',
 								r['url'],
 								self.getColor(r['url']),
@@ -41,7 +46,7 @@ class Hourse(object):
 
 	def launchGource(self):
 		call(['gource', 
-				 '--hide', 'progress',
+				 #'--hide', 'progress',
 				 '-i', '0', 
 				 '-a', '1', 
 				 'log.tmp'])
@@ -64,4 +69,4 @@ class Hourse(object):
 		return o
 
 if __name__ == "__main__":
-	main = Hourse()
+	main = Hourse('Chrome')

@@ -135,4 +135,21 @@ class chrome_db(database):
         r = self.db.execute(q)
         h = []
         for idx,url,title in r:
-            print self.noUni(title)
+            if url.find('place:') == -1:
+                url = self.strip(self.noUni(url))
+                suf = url[:url.find('.')]
+                url+='.'+suf
+
+                for v in self.getVisits(idx):
+                    h.append({
+                        'id': idx,
+                       'url': url,
+                     'title': self.noUni(title) if title else url,
+                      'time': str((v[0]/1000000)-11644473600)
+                        });
+        return h[::-1]
+
+    def getVisits(self,url):
+        q = 'SELECT visit_time,url,from_visit FROM visits WHERE url = %s'
+        q%=url
+        return self.db.execute(q)
