@@ -8,10 +8,6 @@ import unicodedata
 
 class database(object):
 
-    def listHistory(self): raise NotImplementedError
-
-    def getVisits(self): raise NotImplementedError
-
     def strip(self,url,dist=5):
         strip = ['http://','https://']
         for s in strip:
@@ -28,6 +24,10 @@ class database(object):
             return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
         else:
             return ' '
+
+    def listHistory(self): raise NotImplementedError
+
+    def getVisits(self): raise NotImplementedError
 
 
 ###
@@ -130,4 +130,9 @@ class chrome_db(database):
         self.history = history
 
     def listHistory(self):
-        pass
+        q = 'SELECT id,url,title FROM urls ORDER BY id DESC LIMIT %d'
+        q%= self.history
+        r = self.db.execute(q)
+        h = []
+        for idx,url,title in r:
+            print self.noUni(title)
