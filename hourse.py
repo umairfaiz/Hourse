@@ -54,11 +54,7 @@ class Hourse(object):
                  'log/history.hrc'])
 
     def getColor(self,url):
-        r = hex(random.randrange(200,255,1))[-2:]
-        g = hex(random.randrange(200,255,1))[-2:]
-        b = hex(random.randrange(200,255,1))[-2:]
-        o = r+g+b
-
+        o = ''
         if url.find('imgur.com') > -1:
             o = '85BF25'
         elif url.find('reddit.com') > -1:
