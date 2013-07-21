@@ -3,6 +3,33 @@ import sys
 import sqlite3 # Needs 3.7.17
 import unicodedata
 
+
+
+class database(object):
+
+    def listHistory(self): raise NotImplementedError
+
+    def getVisits(self): raise NotImplementedError
+
+    def strip(self,url,dist=5):
+        strip = ['http://','https://']
+        for s in strip:
+            url = url.strip(s)
+
+        f = url.find('.')
+        if f < dist:
+            url = url[f+1:]
+
+        return url
+    def noUni(self,instr):
+        if instr:
+            return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
+        else:
+            return ' '
+
+
+
+
 ### moz_places:
 #0  id
 #1  url
@@ -24,7 +51,7 @@ import unicodedata
 #4  visit_type
 #5  session
 
-class firefox_db:
+class firefox_db(database):
     def __init__(self,history = 100):
         places = os.environ['APPDATA']+'\\Mozilla\\Firefox\\Profiles\\bpin7umv.default\\places.sqlite'
         self.db = sqlite3.connect(places)
@@ -60,18 +87,4 @@ class firefox_db:
 
         return self.db.execute(q%idx)
 
-    def strip(self,url,dist=5):
-        strip = ['http://','https://']
-        for s in strip:
-            url = url.strip(s)
 
-        f = url.find('.')
-        if f < dist:
-            url = url[f+1:]
-
-        return url
-    def noUni(self,instr):
-        if instr:
-            return unicodedata.normalize('NFKD', instr).encode('ascii','ignore')
-        else:
-            return ' '
